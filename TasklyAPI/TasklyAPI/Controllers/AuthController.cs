@@ -17,10 +17,10 @@ namespace TasklyAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly PasswordService _passwordService;
-        private readonly ApplicationDbContext _context;
+        private readonly TasklyDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthController(ApplicationDbContext context, PasswordService passwordService, IConfiguration configuration)
+        public AuthController(TasklyDbContext context, PasswordService passwordService, IConfiguration configuration)
         {
             _context = context;
             _passwordService = passwordService;
@@ -36,11 +36,11 @@ namespace TasklyAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim("userId", user.Id.ToString()),
-            new Claim(ClaimTypes.Role, user.Role ?? "user")
-        }),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("userId", user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role ?? "user")
+                }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
@@ -54,78 +54,99 @@ namespace TasklyAPI.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUpDto signUpDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Geçersiz model");
-
-            var emailValidation = new EmailAddressAttribute();
-            if (!emailValidation.IsValid(signUpDto.Email))
-                return BadRequest("Geçersiz e-posta adresi.");
-
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == signUpDto.Email);
-            if (existingUser != null)
-                return BadRequest("Bu e-posta adresi zaten kullanımda.");
-
-            var baseUsername = $"{signUpDto.Surname}.{signUpDto.Name}".ToLower();
-            var username = baseUsername;
-            int counter = 1;
-
-            while (await _context.Users.AnyAsync(u => u.Username == username))
+            try
             {
-                username = $"{baseUsername}{counter}";
-                counter++;
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // E-posta kontrolü
+                var existingUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == signUpDto.Email.ToLower());
+                
+                if (existingUser != null)
+                    return BadRequest("Bu e-posta adresi zaten kullanımda.");
+
+                // Kullanıcı adı oluşturma
+                var baseUsername = $"{signUpDto.Name.ToLower()}.{signUpDto.Surname.ToLower()}";
+                var username = baseUsername;
+                int counter = 1;
+
+                while (await _context.Users.AnyAsync(u => u.Username.ToLower() == username.ToLower()))
+                {
+                    username = $"{baseUsername}{counter}";
+                    counter++;
+                }
+
+                var user = new User
+                {
+                    Name = signUpDto.Name,
+                    Surname = signUpDto.Surname,
+                    Email = signUpDto.Email,
+                    Username = username,
+                    Role = "user",
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                user.PasswordHash = _passwordService.HashPassword(user, signUpDto.Password);
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Kullanıcı başarıyla oluşturuldu",
+                    username = user.Username
+                });
             }
-
-            var user = new User
+            catch (Exception ex)
             {
-                Name = signUpDto.Name,
-                Surname = signUpDto.Surname,
-                Email = signUpDto.Email,
-                Username = username,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true,
-            };
-
-            var hashedPassword = _passwordService.HashPassword(user, signUpDto.Password);
-            user.PasswordHash = hashedPassword;
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                message = "Kullanıcı başarıyla kaydedildi. Lütfen giriş yapınız.",
-                username = user.Username
-            });
+                return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+            }
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Geçersiz model");
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u =>
-                    u.Email.ToLower() == loginDto.EmailOrUsername.ToLower() ||
-                    u.Username.ToLower() == loginDto.EmailOrUsername.ToLower());
-
-            if (user == null)
-                return Unauthorized("Kullanıcı bulunamadı.");
-
-            var isPasswordValid = _passwordService.VerifyPassword(user, user.PasswordHash, loginDto.Password);
-
-            if (!isPasswordValid)
-                return Unauthorized("Şifre hatalı.");
-
-            var token = GenerateJwtToken(user);
-
-            return Ok(new
+            try
             {
-                message = "Giriş başarılı",
-                username = user.Username,
-                token = token
-            });
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => 
+                        (u.Email.ToLower() == loginDto.EmailOrUsername.ToLower() || 
+                         u.Username.ToLower() == loginDto.EmailOrUsername.ToLower()) &&
+                        u.IsActive);
+
+                if (user == null)
+                    return Unauthorized("Kullanıcı bulunamadı veya hesap aktif değil.");
+
+                var isPasswordValid = _passwordService.VerifyPassword(user, user.PasswordHash, loginDto.Password);
+
+                if (!isPasswordValid)
+                    return Unauthorized("Geçersiz şifre.");
+
+                var token = GenerateJwtToken(user);
+
+                return Ok(new
+                {
+                    token = token,
+                    user = new
+                    {
+                        id = user.Id,
+                        username = user.Username,
+                        email = user.Email,
+                        name = user.Name,
+                        surname = user.Surname,
+                        role = user.Role
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+            }
         }
     }
 }

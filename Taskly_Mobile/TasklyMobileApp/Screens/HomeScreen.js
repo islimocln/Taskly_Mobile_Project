@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensio
 export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      
       {/* Üst %60: Görsel */}
       <View style={styles.imageContainer}>
         <Image 
@@ -16,16 +15,26 @@ export default function HomeScreen({ navigation }) {
 
       {/* Alt %40: Butonlar ve metin */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.btnPrimary} onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.btnTextPrimary}>Sign Up</Text>
+        <Text style={styles.title}>Taskly'e Hoş Geldiniz!</Text>
+        <Text style={styles.description}>Projelerinizi ve görevlerinizi kolayca yönetin</Text>
+        
+        <TouchableOpacity 
+          style={styles.btnPrimary} 
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.btnTextPrimary}>Giriş Yap</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.btnTextSecondary}>Login</Text>
+        <TouchableOpacity 
+          style={styles.btnSecondary} 
+          onPress={() => navigation.navigate('SignUp')}
+        >
+          <Text style={styles.btnTextSecondary}>Hesap Oluştur</Text>
         </TouchableOpacity>
 
-        <Text style={styles.description}>Start managing your tasks today!</Text>
-        <Text style={styles.subDescription}>Taskly 101: Get organized, plan your day, and track your goals!</Text>
+        <Text style={styles.subDescription}>
+          Hemen başlayın ve işlerinizi organize edin!
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -36,62 +45,72 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FCF6EC',
+    backgroundColor: '#FFFFFF',
   },
   imageContainer: {
-    height: windowHeight * 0.6,
+    height: windowHeight * 0.5,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F7FA',
   },
   image: {
     width: '80%',
     height: '80%',
   },
   buttonContainer: {
-    height: windowHeight * 0.4,
-    paddingHorizontal: 20,
+    height: windowHeight * 0.5,
+    paddingHorizontal: 24,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1A73E8',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 32,
+    textAlign: 'center',
   },
   btnPrimary: {
-    backgroundColor: '#FCF6EC',
-    borderColor: '#1A73E8',
-    borderWidth: 2,
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    marginBottom: 15,
-    width: '80%',
+    backgroundColor: '#1A73E8',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    marginBottom: 16,
+    width: '100%',
+    elevation: 2,
   },
   btnTextPrimary: {
-    color: '#1A73E8',
+    color: '#FFFFFF',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
   },
   btnSecondary: {
-    backgroundColor: '#1A73E8',
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    marginBottom: 20,
-    width: '80%',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#1A73E8',
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    marginBottom: 24,
+    width: '100%',
   },
   btnTextSecondary: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  description: {
-    fontSize: 18,
-    textAlign: 'center',
     color: '#1A73E8',
-    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
   subDescription: {
     fontSize: 14,
     textAlign: 'center',
-    color: '#333',
+    color: '#666',
   },
 });

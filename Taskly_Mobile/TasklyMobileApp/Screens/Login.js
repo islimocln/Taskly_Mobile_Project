@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useLoginMutation } from '../Apis/AuthApi';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../Storage/redux/AuthSlice';
+import { login } from '../Storage/redux/AuthSlice';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -14,7 +14,7 @@ const Login = () => {
     password: '',
   });
 
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [loginMutation, { isLoading }] = useLoginMutation();
 
   const handleChange = (key, value) => {
     setLoginData({ ...loginData, [key]: value });
@@ -22,41 +22,59 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await login(loginData).unwrap();
+      if (!loginData.emailOrUsername || !loginData.password) {
+        Alert.alert('Uyarı', 'Lütfen tüm alanları doldurun.');
+        return;
+      }
+
+      const response = await loginMutation(loginData).unwrap();
+      
       if (response.token) {
-        dispatch(loginSuccess({ token: response.token, user: response.user }));
-        navigation.navigate('Dashboard');
+        dispatch(login({ token: response.token, user: response.user }));
+        // Login başarılı olduğunda navigation otomatik olarak Main stack'e geçecek
+      } else {
+        Alert.alert('Hata', 'Giriş başarısız. Lütfen tekrar deneyin.');
       }
     } catch (err) {
-      Alert.alert('Giriş Hatası', 'Email/kullanıcı adı veya şifre hatalı olabilir.');
-      console.error('Login Error: ', err);
+      console.error('Login Error:', err);
+      Alert.alert(
+        'Giriş Hatası',
+        err.message || 'Email/kullanıcı adı veya şifre hatalı olabilir.'
+      );
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Giriş Yap</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email or Username"
+        placeholder="Email veya Kullanıcı Adı"
         value={loginData.emailOrUsername}
         onChangeText={(text) => handleChange('emailOrUsername', text)}
         autoCapitalize="none"
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Şifre"
         value={loginData.password}
         onChangeText={(text) => handleChange('password', text)}
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
-        <Text style={styles.buttonText}>{isLoading ? 'Logging In...' : 'Log In'}</Text>
+      <TouchableOpacity 
+        style={[styles.button, isLoading && styles.buttonDisabled]} 
+        onPress={handleLogin} 
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#FFF" />
+        ) : (
+          <Text style={styles.buttonText}>Giriş Yap</Text>
+        )}
       </TouchableOpacity>
-
-      {error && <Text style={styles.error}>Hata: {error.message}</Text>}
     </View>
   );
 };
@@ -90,15 +108,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10
   },
+  buttonDisabled: {
+    backgroundColor: '#93c5fd',
+  },
   buttonText: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  error: {
-    color: 'red',
-    marginTop: 10,
-    textAlign: 'center',
   }
 });
 

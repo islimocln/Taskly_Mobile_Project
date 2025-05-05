@@ -1,30 +1,55 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { config } from './config';
+import { config, prepareHeaders } from './config';
 
 export const AuthApi = createApi({
-  reducerPath: 'AuthApi',
+  reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: config.baseUrl, // Backend base URL'ini buraya ekle
+    baseUrl: config.baseUrl,
+    timeout: config.timeout,
+    prepareHeaders,
   }),
   endpoints: (builder) => ({
     // Kayıt işlemi
     signUp: builder.mutation({
       query: (signUpData) => ({
-        url: 'Auth/signup',  // API endpoint'ini belirt
+        url: 'Auth/signup',
         method: 'POST',
-        body: signUpData,    // Kayıt verilerini gönder
+        body: signUpData,
       }),
+      transformResponse: (response) => {
+        console.log('SignUp Response:', response);
+        return response;
+      },
+      transformErrorResponse: (error) => {
+        console.error('SignUp Error:', error);
+        return {
+          status: error.status,
+          message: error.data?.message || 'Kayıt işlemi sırasında bir hata oluştu'
+        };
+      },
     }),
 
     // Login işlemi ve JWT token'ı al
     login: builder.mutation({
       query: (loginData) => ({
-        url: 'Auth/login',  // Login endpoint'ini belirt
+        url: 'Auth/login',
         method: 'POST',
-        body: loginData,    // Login verilerini gönder
+        body: loginData,
       }),
+      transformResponse: (response) => {
+        console.log('Login Response:', response);
+        return response;
+      },
+      transformErrorResponse: (error) => {
+        console.error('Login Error:', error);
+        return {
+          status: error.status,
+          message: error.data?.message || 'Giriş yapılırken bir hata oluştu'
+        };
+      },
     }),
   }),
+  tagTypes: ['Auth'],
 });
 
 export const { useSignUpMutation, useLoginMutation } = AuthApi;
