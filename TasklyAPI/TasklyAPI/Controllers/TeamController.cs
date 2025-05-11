@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TasklyAPI.Context;
 using TasklyAPI.Entities;
-
+using TasklyAPI.DTOS.TeamDTOs;
 namespace TasklyAPI.Controllers
 {
     [ApiController]
@@ -41,12 +41,19 @@ namespace TasklyAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Team>> CreateTeam(Team team)
+        public async Task<IActionResult> CreateTeam([FromBody] CreateTeamDto dto)
         {
-            team.CreatedAt = DateTime.Now;
+            var team = new Team
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = null 
+            };
+
             _context.Teams.Add(team);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetTeam), new { id = team.Id }, team);
+            return Ok(team);
         }
 
         [HttpPost("{teamId}/members")]

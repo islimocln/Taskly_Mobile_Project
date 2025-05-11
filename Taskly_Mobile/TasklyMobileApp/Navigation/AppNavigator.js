@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import { View, Text, Button } from 'react-native';
 
 // Import screens
 import HomeScreen from '../Screens/HomeScreen';
@@ -209,6 +210,14 @@ const MainStack = () => {
   );
 };
 
+const TeamsStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Teams" component={Teams} options={{ title: 'Takımlar' }} />
+    <Stack.Screen name="CreateTeam" component={CreateTeam} options={{ title: 'Yeni Takım' }} />
+    {/* ... */}
+  </Stack.Navigator>
+);
+
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
@@ -223,22 +232,21 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: '#1A73E8',
         drawerInactiveTintColor: '#666',
       }}
-      initialRouteName="MainStack"
+      initialRouteName="Dashboard"
     >
       <Drawer.Screen
-        name="MainStack"
-        component={MainStack}
+        name="Dashboard"
+        component={Dashboard}
         options={{
           title: 'Ana Sayfa',
-          headerShown: false,
           drawerIcon: ({ color }) => (
             <Ionicons name="home-outline" size={22} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="Projects"
-        component={Projects}
+        name="ProjectsStack"
+        component={ProjectsStack}
         options={{
           title: 'Projeler',
           drawerIcon: ({ color }) => (
@@ -247,8 +255,18 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Tasks"
-        component={Tasks}
+        name="TeamsStack"
+        component={TeamsStack}
+        options={{
+          title: 'Takımlar',
+          drawerIcon: ({ color }) => (
+            <Ionicons name="people-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="TasksStack"
+        component={TasksStack}
         options={{
           title: 'Görevler',
           drawerIcon: ({ color }) => (
@@ -302,6 +320,22 @@ const AuthStack = () => {
     </Stack.Navigator>
   );
 };
+
+const ProjectsStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Projects" component={Projects} options={{ title: 'Projeler' }} />
+    <Stack.Screen name="CreateProject" component={CreateProject} options={{ title: 'Yeni Proje' }} />
+    {/* Diğer proje ile ilgili ekranlar */}
+  </Stack.Navigator>
+);
+
+const TasksStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Tasks" component={Tasks} options={{ title: 'Görevler' }} />
+    <Stack.Screen name="CreateTask" component={CreateTask} options={{ title: 'Yeni Görev' }} />
+    {/* Diğer görev ile ilgili ekranlar */}
+  </Stack.Navigator>
+);
 
 const AppNavigator = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

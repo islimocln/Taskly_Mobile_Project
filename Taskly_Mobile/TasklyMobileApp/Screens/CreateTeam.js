@@ -19,7 +19,6 @@ const CreateTeam = () => {
   const [teamData, setTeamData] = useState({
     name: '',
     description: '',
-    members: [],
   });
 
   const handleChange = (key, value) => {
@@ -33,7 +32,11 @@ const CreateTeam = () => {
         return;
       }
 
-      await createTeam(teamData).unwrap();
+      await createTeam({
+        name: teamData.name,
+        description: teamData.description
+      }).unwrap();
+
       Alert.alert('Başarılı', 'Takım başarıyla oluşturuldu.');
       navigation.goBack();
     } catch (error) {

@@ -195,22 +195,12 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "team",
-        "Type": "TasklyAPI.Entities.Team",
+        "Name": "dto",
+        "Type": "TasklyAPI.DTOS.TeamDTOs.CreateTeamDto",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "TasklyAPI.Entities.Team",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "TasklyAPI.Controllers.TeamController",

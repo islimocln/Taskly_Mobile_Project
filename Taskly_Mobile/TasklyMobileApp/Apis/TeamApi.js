@@ -24,10 +24,10 @@ export const teamApi = createApi({
       providesTags: ['Team'],
     }),
     createTeam: builder.mutation({
-      query: (team) => ({
+      query: ({ name, description }) => ({
         url: 'teams',
         method: 'POST',
-        body: team,
+        body: { name, description },
       }),
       invalidatesTags: ['Team'],
     }),

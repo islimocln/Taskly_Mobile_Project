@@ -15,33 +15,6 @@ const Projects = () => {
   const navigation = useNavigation();
   const { data: projects, isLoading, error } = useGetProjectsQuery();
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#1A73E8" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Bir hata oluştu!</Text>
-        <Text style={styles.errorDetail}>
-          {error.status === 'FETCH_ERROR' 
-            ? 'Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.'
-            : error.data?.message || 'Beklenmeyen bir hata oluştu.'}
-        </Text>
-        <TouchableOpacity
-          style={styles.retryButton}
-          onPress={() => navigation.replace('Projects')}
-        >
-          <Text style={styles.retryText}>Tekrar Dene</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
   const renderProjectItem = ({ item }) => (
     <TouchableOpacity
       style={styles.projectCard}
@@ -92,17 +65,38 @@ const Projects = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={projects}
-        renderItem={renderProjectItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Henüz hiç proje oluşturulmamış.</Text>
-          </View>
-        }
-      />
+      {isLoading ? (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color="#1A73E8" />
+        </View>
+      ) : error ? (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Bir hata oluştu!</Text>
+          <Text style={styles.errorDetail}>
+            {error.status === 'FETCH_ERROR'
+              ? 'Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.'
+              : error.data?.message || 'Beklenmeyen bir hata oluştu.'}
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => navigation.replace('Projects')}
+          >
+            <Text style={styles.retryText}>Tekrar Dene</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <FlatList
+          data={projects}
+          renderItem={renderProjectItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>Henüz hiç proje oluşturulmamış.</Text>
+            </View>
+          }
+        />
+      )}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => navigation.navigate('CreateProject')}

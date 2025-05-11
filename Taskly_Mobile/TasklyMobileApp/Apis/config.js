@@ -1,7 +1,7 @@
-export const API_URL = "http://10.192.19.50:5055/api";
+export const API_URL = "192.168.1.168:5055/api";
 
 export const config = {
-    baseUrl: 'http://192.168.1.112:5055/api/',
+    baseUrl: 'http://192.168.1.168:5055/api/',
     timeout: 10000, // 10 saniye
     retryCount: 3,  // Başarısız istekleri 3 kez tekrarla
 };
