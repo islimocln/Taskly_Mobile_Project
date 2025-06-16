@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { config, prepareHeaders } from './config';
+import { API_CONFIG, prepareHeaders } from '../src/api/config';
 
 export const AuthApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: config.baseUrl,
-    timeout: config.timeout,
+    baseUrl: API_CONFIG.BASE_URL,
+    timeout: API_CONFIG.TIMEOUT,
     prepareHeaders,
   }),
   endpoints: (builder) => ({

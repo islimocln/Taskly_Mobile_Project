@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { config, prepareHeaders } from './config';
+import { API_CONFIG, prepareHeaders } from '../src/api/config';
 
 export const documentApi = createApi({
   reducerPath: 'documentApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: config.baseUrl,
+    baseUrl: API_CONFIG.BASE_URL,
     prepareHeaders,
   }),
   tagTypes: ['Document'],

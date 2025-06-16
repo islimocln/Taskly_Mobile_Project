@@ -1,52 +1,83 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { config, prepareHeaders } from './config';
+import { API_CONFIG } from '../src/api/config'
+import ApiService from '../services/ApiService';
 
 export const projectApi = createApi({
   reducerPath: 'projectApi',
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: config.baseUrl,
-    prepareHeaders,
+  baseQuery: fetchBaseQuery({
+    baseUrl: API_CONFIG.BASE_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = getState().auth.token;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ['Project'],
   endpoints: (builder) => ({
     // Tüm projeleri getir
     getProjects: builder.query({
-      query: () => 'projects',
+      queryFn: async () => {
+        try {
+          const response = await ApiService.get('/projects');
+          return { data: response };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
       providesTags: ['Project'],
     }),
 
     // Tek bir projeyi getir
     getProjectById: builder.query({
-      query: (id) => `projects/${id}`,
-      providesTags: ['Project'],
+      queryFn: async (id) => {
+        try {
+          const response = await ApiService.get(`/projects/${id}`);
+          return { data: response };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+      providesTags: (result, error, id) => [{ type: 'Project', id }],
     }),
 
     // Yeni proje oluştur
     createProject: builder.mutation({
-      query: (project) => ({
-        url: 'projects',
-        method: 'POST',
-        body: project,
-      }),
+      queryFn: async (body) => {
+        try {
+          const response = await ApiService.post('/projects', body);
+          return { data: response };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
       invalidatesTags: ['Project'],
     }),
 
     // Proje güncelle
     updateProject: builder.mutation({
-      query: ({ id, project }) => ({
-        url: `projects/${id}`,
-        method: 'PUT',
-        body: project,
-      }),
-      invalidatesTags: ['Project'],
+      queryFn: async (body) => {
+        try {
+          const response = await ApiService.put('/projects', body);
+          return { data: response };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+      invalidatesTags: (result, error, arg) => [{ type: 'Project', id: arg.id }],
     }),
 
     // Proje sil
     deleteProject: builder.mutation({
-      query: (id) => ({
-        url: `projects/${id}`,
-        method: 'DELETE',
-      }),
+      queryFn: async (id) => {
+        try {
+          const response = await ApiService.delete(`/projects/${id}`);
+          return { data: response };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
       invalidatesTags: ['Project'],
     }),
 
