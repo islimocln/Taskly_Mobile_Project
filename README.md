@@ -35,40 +35,66 @@ Bu depo **mobil istemciyi (React Native)** içerir. (Web: React / Backend API: A
 - **Mimari:** RESTful API
 
 ---
-
 ## 📸 Taskly Mobil – Ekran Görüntüleri
 
-<p align="center">
-  <img src="./docs/01-auth-landing-mobile.png" width="260" alt="Açılış (Giriş/Kayıt)"/>
-  <img src="./docs/02-login-mobile.png" width="260" alt="Giriş"/>
-  <img src="./docs/03-dashboard-home-mobile.png" width="260" alt="Ana Ekran / Dashboard"/>
-</p>
-<p align="center">
-  <img src="./docs/04-projects-list-mobile.png" width="260" alt="Projeler Listesi"/>
-  <img src="./docs/05-project-create-mobile.png" width="260" alt="Yeni Proje Oluştur"/>
-  <img src="./docs/06-teams-list-mobile.png" width="260" alt="Takımlar Listesi"/>
-</p>
-<p align="center">
-  <img src="./docs/07-team-create-mobile.png" width="260" alt="Yeni Takım Oluştur"/>
-  <img src="./docs/08-tasks-list-mobile.png" width="260" alt="Görevler Listesi"/>
-  <img src="./docs/09-task-create-mobile.png" width="260" alt="Yeni Görev Oluştur"/>
-</p>
-<p align="center">
-  <img src="./docs/10-documents-mobile.png" width="260" alt="Dokümanlar"/>
-  <img src="./docs/11-setting-mobile.png" width="260" alt="Ayarlar"/>
-  <img src="./docs/12-notifications-mobile.png" width="260" alt="Bildirimler"/>
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <a href="./docs/01-auth-landing-mobile.png">
+        <img src="./docs/01-auth-landing-mobile.png" alt="01-auth-landing-mobile" width="360">
+      </a><br>
+      <sub>01 — Açılış (Giriş/Kayıt) • <a href="./docs/01-auth-landing-mobile.png">Dosya</a></sub>
+    </td>
+    <td align="center">
+      <a href="./docs/02-login-mobile.png">
+        <img src="./docs/02-login-mobile.png" alt="02-login-mobile" width="360">
+      </a><br>
+      <sub>02 — Giriş Ekranı • <a href="./docs/02-login-mobile.png">Dosya</a></sub>
+    </td>
+  </tr>
 
-### Dosya Eşlemesi (Hızlı Bakış)
-- 01 — `./docs/01-auth-landing-mobile.png`
-- 02 — `./docs/02-login-mobile.png`
-- 03 — `./docs/03-dashboard-home-mobile.png`
-- 04 — `./docs/04-projects-list-mobile.png`
-- 05 — `./docs/05-project-create-mobile.png`
-- 06 — `./docs/06-teams-list-mobile.png`
-- 07 — `./docs/07-team-create-mobile.png`
-- 08 — `./docs/08-tasks-list-mobile.png`
-- 09 — `./docs/09-task-create-mobile.png`
-- 10 — `./docs/10-documents-mobile.png`
-- 11 — `./docs/11-setting-mobile.png`
-- 12 — `./docs/12-notifications-mobile.png`
+  <tr>
+    <td align="center">
+      <a href="./docs/03-dashboard-home-mobile.png">
+        <img src="./docs/03-dashboard-home-mobile.png" alt="03-dashboard-home-mobile" width="360">
+      </a><br>
+      <sub>03 — Ana Ekran / Dashboard • <a href="./docs/03-dashboard-home-mobile.png">Dosya</a></sub>
+    </td>
+    <td align="center">
+      <a href="./docs/04-projects-list-mobile.png">
+        <img src="./docs/04-projects-list-mobile.png" alt="04-projects-list-mobile" width="360">
+      </a><br>
+      <sub>04 — Projeler (Liste) • <a href="./docs/04-projects-list-mobile.png">Dosya</a></sub>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <a href="./docs/05-project-create-mobile.png">
+        <img src="./docs/05-project-create-mobile.png" alt="05-project-create-mobile" width="360">
+      </a><br>
+      <sub>05 — Yeni Proje Oluştur • <a href="./docs/05-project-create-mobile.png">Dosya</a></sub>
+    </td>
+    <td align="center">
+      <a href="./docs/06-teams-list-mobile.png">
+        <img src="./docs/06-teams-list-mobile.png" alt="06-teams-list-mobile" width="360">
+      </a><br>
+      <sub>06 — Takımlar (Liste) • <a href="./docs/06-teams-list-mobile.png">Dosya</a></sub>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <a href="./docs/07-team-create-mobile.png">
+        <img src="./docs/07-team-create-mobile.png" alt="07-team-create-mobile" width="360">
+      </a><br>
+      <sub>07 — Yeni Takım Oluştur • <a href="./docs/07-team-create-mobile.png">Dosya</a></sub>
+    </td>
+    <td align="center">
+      <a href="./docs/08-tasks-list-mobile.png">
+        <img src="./docs/08-tasks-list-mobile.png" alt="08-tasks-list-mobile" width="360">
+      </a><br>
+      <sub>08 — Görevler (Liste) • <a href="./docs/08-tasks-list-mobile.png">Dosya</a></sub>
+    </td>
+  <
+
